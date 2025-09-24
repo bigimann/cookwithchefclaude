@@ -1,6 +1,8 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { InferenceClient } from "@huggingface/inference";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const SYSTEM_PROMPT = `
 You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page
 `;
@@ -30,7 +32,7 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
 
 export async function getRecipeFromMistral(ingredientsArr) {
   try {
-    const response = await fetch("http://localhost:5000/api/recipe", {
+    const response = await fetch(`${API_URL}/api/recipe`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,6 +48,6 @@ export async function getRecipeFromMistral(ingredientsArr) {
     return data.choices?.[0]?.message?.content || "No recipe found.";
   } catch (err) {
     console.error("Error fetching recipe:", err);
-    return "Sorry, I couldn't generate a recipe right now. Please check your internet connection and try again.";
+    return Error`Error fetching recipe:, ${err}`;
   }
 }

@@ -93,6 +93,4 @@ app.post("/api/recipe", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}`)
-);
+server.listen(PORT, () => console.log(`Server running on ${PORT}`));
