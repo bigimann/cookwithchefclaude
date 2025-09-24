@@ -1,3 +1,5 @@
+import Anthropic from "@anthropic-ai/sdk";
+
 const API_BASE_URL = "https://cookwithchefeneojo.onrender.com";
 
 const SYSTEM_PROMPT = `
@@ -8,7 +10,7 @@ You are an assistant that receives a list of ingredients that a user has and sug
 export async function getRecipeFromChefClaude(ingredientsArr) {
   const ingredientsString = ingredientsArr.join(", ");
 
-  const msg = await anthropic.messages.create({
+  const msg = await Anthropic.messages.create({
     model: "claude-3-haiku-20240307",
     max_tokens: 1024,
     system: SYSTEM_PROMPT,
@@ -99,3 +101,6 @@ export async function testApiEndpoint() {
     console.error("API Test Error:", err);
   }
 }
+
+// Call this function in your browser console to test:
+// testApiEndpoint();
