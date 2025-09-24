@@ -48,6 +48,6 @@ export async function getRecipeFromMistral(ingredientsArr) {
     return data.choices?.[0]?.message?.content || "No recipe found.";
   } catch (err) {
     console.error("Error fetching recipe:", err);
-    return Error`Error fetching recipe:, ${err}`;
+    return "Sorry, I couldn't generate a recipe right now. Please check your internet connection and try again.";
   }
 }
