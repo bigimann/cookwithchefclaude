@@ -9,6 +9,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// FIX 1: Add static file serving for your React app
+app.use(express.static("build")); // or 'dist' depending on your build folder
+
 const hf = new HfInference(process.env.HF_ACCESS_TOKEN);
 
 const SYSTEM_PROMPT = `You are an expert cooking assistant with comprehensive knowledge of global cuisines. When suggesting recipes, consider dishes from all continents equally and choose the best fit for the available ingredients.
@@ -24,7 +27,7 @@ AFRICAN CUISINES:
 ASIAN CUISINES:
 - East Asian: Stir-fries, Ramen, Sushi, Dumplings, Fried rice
 - South Asian: Curries, Biryani, Dal, Naan, Tandoori dishes
-- Southeast Asian: Pad Thai, Pho, Satay, Rendang, Tom yum
+- Southeast Asian: Pad Thai, Pho, Satay, Rendung, Tom yum
 
 EUROPEAN CUISINES:
 - Mediterranean: Pasta, Paella, Risotto, Greek salads, Pizza
@@ -92,5 +95,12 @@ app.post("/api/recipe", async (req, res) => {
   }
 });
 
+// FIX 2: Add a catch-all handler to serve your React app for any non-API routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html")); // or 'dist/index.html'
+});
+
 const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => console.log(`Server running on ${PORT}`));
+
+// FIX 3: Use 'app' instead of undefined 'server' variable
+app.listen(PORT, () => console.log(`Server running on ${PORT}`));
