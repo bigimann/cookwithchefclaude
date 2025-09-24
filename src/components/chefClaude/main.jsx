@@ -21,9 +21,13 @@ export default function Main() {
   }, [recipe]);
 
   // Get the recipe from the API and save it to the recipe state
+  const tips = document.getElementById("tips");
   async function getRecipe() {
     const recipeMarkDown = await getRecipeFromMistral(ingredients);
     setRecipe(recipeMarkDown);
+    if (recipeMarkDown) {
+      tips.style.display = "none";
+    }
   }
 
   // Display the ingredients from the form data as a list item to the screen
@@ -60,7 +64,7 @@ export default function Main() {
     }
 
     // Check for very short inputs (less than 2 characters)
-    if (newIngredient.trim().length < 2) {
+    if (newIngredient.trim().length < 3) {
       showError("Error: Ingredient name is too short!");
       return;
     }
@@ -89,6 +93,25 @@ export default function Main() {
         recipeSection={recipeSection}
       />
       {recipe && <ClaudeRecipe recipe={recipe} />}
+      <section id="tips" className="tips">
+        <h2>TIPS</h2>
+        <p>
+          <ul>
+            <li>
+              Click on the input box and then submit to add ingredients to the
+              list
+            </li>
+            <li>
+              Add at least 4 ingredients to display the "Get Recipe" button
+            </li>
+            <li>Input should not be empty</li>
+            <li>Ingredients must be at a length of 3 or more</li>
+            <li>
+              Click on "Get a recipe" when your ingredients list is complete
+            </li>
+          </ul>
+        </p>
+      </section>
     </main>
   );
 }

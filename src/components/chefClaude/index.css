@@ -127,3 +127,36 @@ h2 {
   font-weight: 400;
   display: none;
 }
+
+.desktop-warning {
+  display: none;
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  color: black;
+  background-color: white;
+}
+
+.tips {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: #2196f3;
+  margin: 10px 20px;
+  padding: 5px 10px 10px 10px;
+}
+
+.tips > h2 {
+  text-align: center;
+  padding: 0 0 10px 0;
+}
+
+/* When screen ≥ 632px */
+@media (min-width: 632px) {
+  .chef-claude {
+    display: none;
+  }
+  .desktop-warning {
+    display: block;
+  }
+}
