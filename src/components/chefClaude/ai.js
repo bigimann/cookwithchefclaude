@@ -29,16 +29,13 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
 
 export async function getRecipeFromMistral(ingredientsArr) {
   try {
-    const response = await fetch(
-      "https://cookwithchefeneojo.fly.dev/api/recipe",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ingredients: ingredientsArr }),
-      }
-    );
+    const response = await fetch("/api/recipe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ingredients: ingredientsArr }),
+    });
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
