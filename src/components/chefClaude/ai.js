@@ -1,51 +1,15 @@
 import Anthropic from "@anthropic-ai/sdk";
 
-const SYSTEM_PROMPT = `You are an expert cooking assistant with comprehensive knowledge of global cuisines. When suggesting recipes, consider dishes from all continents equally and choose the best fit for the available ingredients.
-
-GLOBAL CUISINE KNOWLEDGE:
-
-AFRICAN CUISINES:
-- West African: Jollof rice, Egusi soup, Suya, Plantain dishes, Fufu, Pepper soup, Akara
-- East African: Injera, Ugali, Nyama choma, Pilau, Mandazi
-- North African: Tagines, Couscous, Harira soup, Shakshuka
-- South African: Bobotie, Boerewors, Pap, Bunny chow
-
-ASIAN CUISINES:
-- East Asian: Stir-fries, Ramen, Sushi, Dumplings, Fried rice
-- South Asian: Curries, Biryani, Dal, Naan, Tandoori dishes
-- Southeast Asian: Pad Thai, Pho, Satay, Rendang, Tom yum
-
-EUROPEAN CUISINES:
-- Mediterranean: Pasta, Paella, Risotto, Greek salads, Pizza
-- Northern European: Stews, Roasts, Potato dishes, Bread-based meals
-
-AMERICAN CUISINES:
-- North American: BBQ, Tex-Mex, Soul food, Comfort foods
-- Latin American: Tacos, Empanadas, Ceviche, Rice and beans
-
-RECIPE SELECTION CRITERIA:
-1. Match ingredients to the most suitable cuisine (regardless of origin)
-2. Consider flavor profiles and cooking techniques that work best
-3. Include both traditional and fusion options when relevant
-4. Highlight lesser-known dishes from various cultures
-5. Suggest variations from different culinary traditions
-
-FORMAT YOUR RESPONSE:
-- Recipe name (with cuisine origin)
-- Brief cultural context or interesting facts
-- Ingredient list
-- Step-by-step instructions
-- Serving suggestions
-- Optional: Alternative versions from other cuisines
-
-APPROACH: Be culturally inclusive, celebrate diversity in global cooking, and choose recipes based on what works best with the available ingredients, not geographic preference.`;
+const SYSTEM_PROMPT = `
+You are an assistant that receives a list of ingredients that a user has and suggests a recipe they could make with some or all of those ingredients. You don't need to use every ingredient they mention in your recipe. The recipe can include additional ingredients they didn't mention, but try not to include too many extra ingredients. Format your response in markdown to make it easier to render to a web page
+`;
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+
   dangerouslyAllowBrowser: true,
 });
 
-// Keep this function - it works fine with dangerouslyAllowBrowser
 export async function getRecipeFromChefClaude(ingredientsArr) {
   const ingredientsString = ingredientsArr.join(", ");
 
@@ -63,11 +27,9 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
   return msg.content[0].text;
 }
 
-// ✅ FIXED: Call your backend instead of HuggingFace directly
 export async function getRecipeFromMistral(ingredientsArr) {
   try {
-    // Call your backend API endpoint, not HuggingFace directly
-    const response = await fetch("/api/recipe", {
+    const response = await fetch("http://localhost:5000/api/recipe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const path = require("path");
 const { HfInference } = require("@huggingface/inference");
 const dotenv = require("dotenv");
 
@@ -9,9 +8,6 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
-
-// Serve static files if you have a React build folder
-app.use(express.static(path.join(__dirname, "build")));
 
 const hf = new HfInference(process.env.HF_ACCESS_TOKEN);
 
@@ -55,15 +51,7 @@ FORMAT YOUR RESPONSE:
 
 APPROACH: Be culturally inclusive, celebrate diversity in global cooking, and choose recipes based on what works best with the available ingredients, not geographic preference.`;
 
-// Add request logging
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`, req.body);
-  next();
-});
-
 app.post("/api/recipe", async (req, res) => {
-  console.log("Recipe endpoint hit with:", req.body);
-
   try {
     const { ingredients } = req.body;
 
@@ -74,7 +62,6 @@ app.post("/api/recipe", async (req, res) => {
     }
 
     const ingredientsString = ingredients.join(", ");
-    console.log("Processing ingredients:", ingredientsString);
 
     const response = await hf.chatCompletion({
       model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -88,8 +75,6 @@ app.post("/api/recipe", async (req, res) => {
       max_tokens: 1024,
     });
 
-    console.log("HuggingFace response received");
-
     res.json({
       choices: [
         {
@@ -100,30 +85,19 @@ app.post("/api/recipe", async (req, res) => {
       ],
     });
   } catch (err) {
-    console.error("Recipe generation error:", err);
+    console.error("Error:", err.message);
     res
       .status(500)
       .json({ error: "Failed to generate recipe. Please try again." });
   }
 });
 
-// Health check endpoint
-app.get("/", (req, res) => {
-  res.json({
-    message: "Recipe API is running!",
-    endpoints: ["/api/recipe"],
-    status: "healthy",
-  });
-});
-
-// Catch-all for React Router (if serving React build)
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
 const port = process.env.PORT || 8080;
 
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
-  console.log(`API endpoint: http://localhost:${port}/api/recipe`);
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello, welcome to my API");
 });
