@@ -1,5 +1,4 @@
 import Anthropic from "@anthropic-ai/sdk";
-const { HfInference } = require("@huggingface/inference");
 
 const SYSTEM_PROMPT = `You are an expert cooking assistant with comprehensive knowledge of global cuisines. When suggesting recipes, consider dishes from all continents equally and choose the best fit for the available ingredients.
 
@@ -43,10 +42,10 @@ APPROACH: Be culturally inclusive, celebrate diversity in global cooking, and ch
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
-
   dangerouslyAllowBrowser: true,
 });
 
+// Keep this function - it works fine with dangerouslyAllowBrowser
 export async function getRecipeFromChefClaude(ingredientsArr) {
   const ingredientsString = ingredientsArr.join(", ");
 
@@ -64,23 +63,24 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
   return msg.content[0].text;
 }
 
-const hf = new HfInference(process.env.HF_ACCESS_TOKEN);
-
+// ✅ FIXED: Call your backend instead of HuggingFace directly
 export async function getRecipeFromMistral(ingredientsArr) {
-  const ingredientsString = ingredientsArr.join(", ");
   try {
-    const response = await hf.chatCompletion({
-      model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: `I have ${ingredientsString}. Please give me a recipe you'd recommend I make!`,
-        },
-      ],
-      max_tokens: 1024,
+    // Call your backend API endpoint, not HuggingFace directly
+    const response = await fetch("/api/recipe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ingredients: ingredientsArr }),
     });
-    return response.choices[0].message.content || "No recipe found.";
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || "No recipe found.";
   } catch (err) {
     console.error("Error fetching recipe:", err);
     return "Sorry, I couldn't generate a recipe right now. Please check your internet connection and try again.";
