@@ -53,8 +53,12 @@ export default function Main() {
     };
 
     // Validation checks
-    if (!newIngredient || newIngredient.trim() === "") {
-      showError("Error: Please enter an ingredient!");
+    if (
+      !newIngredient ||
+      (newIngredient.trim() === "" && !newIngredient) ||
+      newIngredient.trim() < 4
+    ) {
+      showError("Error: Please add at least ingredients!");
       return;
     }
 

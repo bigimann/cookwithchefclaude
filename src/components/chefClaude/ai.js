@@ -29,7 +29,7 @@ export async function getRecipeFromChefClaude(ingredientsArr) {
 
 export async function getRecipeFromMistral(ingredientsArr) {
   try {
-    const response = await fetch("http://localhost:5000/api/recipe", {
+    const response = await fetch("/api/recipe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
