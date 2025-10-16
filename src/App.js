@@ -1,5 +1,5 @@
-import Main from "./components/chefClaude/main";
-import Header from "./components/chefClaude/header";
+import Main from "./components/chefClaude/main.jsx";
+import Header from "./components/chefClaude/header.jsx";
 
 function App() {
   return (

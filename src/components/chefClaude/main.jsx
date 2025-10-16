@@ -1,7 +1,7 @@
 import React from "react";
-import ClaudeRecipe from "./claudeRecipe";
-import IngredientsList from "./ingredientsList";
-import { getRecipeFromMistral } from "./ai";
+import ClaudeRecipe from "./claudeRecipe.jsx";
+import IngredientsList from "./ingredientsList.jsx";
+import { getRecipeFromMistral } from "./ai.js";
 import "./index.css";
 
 export default function Main() {
