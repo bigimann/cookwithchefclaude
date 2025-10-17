@@ -29,7 +29,7 @@ export default async function handler(request) {
     const ingredientsString = ingredients.join(", ");
 
     const response = await client.chatCompletion({
-      model: "mistralai/Mixtral-8x7B-Instruct-v0.1",
+      model: "mistralai/Mistral-7B-Instruct-v0.2",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         {
